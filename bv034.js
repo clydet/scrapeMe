@@ -2,11 +2,20 @@
 var cheerio = require('cheerio');
 var request = require('request');
 var shell = require('child_process');
+var messagesent=false;
+var targetevent='BV034';
+var eventdate='8/18/2016';
+var sportnumber='8'
+
+
 
 //var url = 'https://www.cosport.com/olympics/tickets.aspx?SportID=7&EventDate=8/10/2016';
-var url = 'https://www.cosport.com/olympics/tickets.aspx?SportID=3&EventDate=8/14/2016';
+var url = 'https://www.cosport.com/olympics/tickets.aspx?SportID='+sportnumber+'&EventDate='+eventdate;
 
-var interval = 1000; //milliseconds
+
+
+
+var interval = 10000; //milliseconds
 var options = {
   uri: url, 
   headers: {
@@ -20,22 +29,29 @@ var reqCallback = function(error, response, body) {
       var $ = cheerio.load(body);
       var $eventEl = $('.redText');
       var $unavailable = $('.NoItemsMessage');
-
       if($unavailable.length > 0){
-        console.log('not available');
+        console.log(targetevent+' not available '+new Date());
+        messagesent=false;
       } 
 
       if ($eventEl.length > 0){
+        var eventlist;
         for(var i = 0; i < $eventEl.length; i++){
+          eventlist+=''+$($eventEl[i]).text();
           console.log('event: ' + i, $($eventEl[i]).text());
+          console.log('EVENTLIST'+eventlist+'  '+typeof eventlist);
         }
-
-        shell.exec(__dirname + '/sendText.sh', function(error, stdout, stderr){
-          console.log('stdout:', stdout);
+        if ((messagesent==false)&&(eventlist.indexOf(targetevent)>-1)){
+        console.log('calling bash script');
+        shell.exec(__dirname + '/sendText'+targetevent+'.sh', function(error, stdout, stderr){
+          console.log('stderr:', stderr);
+          console.log('stdout:',stdout); 
         });
+       messagesent=true;}
       }
     } else {
-      console.log('session may have expired status:', response.statusCode);
+      if (typeof response!='undefined'){console.log(targetevent+' session may have expired status:',response.statusCode);}
+      else {console.log(targetevent+' session may have expired and response is undefined');}
     }
 
     setTimeout(guts, interval);
