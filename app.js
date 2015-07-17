@@ -46,8 +46,6 @@ var getCallback = function(context) {
         console.log(context.code + ' session may have expired and response is undefined');
       }
     }
-
-    setTimeout(guts, interval);
   }
 };
 
@@ -69,6 +67,8 @@ var guts = function(){
 
     request( options, getCallback( jsonData[event] ) );
   }
+  
+  setTimeout(guts, interval);
 };
 
 guts();
