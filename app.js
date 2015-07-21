@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+var functioncalltime = new Date(); 
 var cheerio = require('cheerio');
 var request = require('request');
 var shell = require('child_process');
@@ -6,7 +7,8 @@ var jsonData = require('./events/data');
 //var jsonData = require('./events/deleteme');
 
 var interval = 10000; //milliseconds
-
+var maxhangtime = 300000;// if function isn't called in this time, the program is 'crashed' so that it can restart
+setInterval(checkTime,60000);//check if program is hung once/minute
 var getCallback = function(context) {
   return function(error, response, body) {
 
@@ -50,6 +52,8 @@ var getCallback = function(context) {
 };
 
 var guts = function(){
+  console.log('***');
+  functioncalltime= new Date(); 
   for(var event in jsonData){
 
     var url = 'https://www.cosport.com/olympics/tickets.aspx?SportID=' + 
@@ -73,3 +77,11 @@ var guts = function(){
 
 guts();
 
+function checkTime(){
+ var now = new Date(); 
+ console.log('checktime'); 
+ if (now-functioncalltime>maxhangtime){
+  crashme();}
+}
+function crashme(){
+ CRASH();}
