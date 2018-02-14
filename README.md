@@ -1,3 +1,4 @@
 # scrapeMe
 
 ![blah](http://clydet.github.io/scrapeMe/myapp.svg)
+[interactive](http://clydet.github.io/scrapeMe/myapp.svg)
