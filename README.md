@@ -1,1 +1,3 @@
 # scrapeMe
+
+![blah](myapp.svg)
