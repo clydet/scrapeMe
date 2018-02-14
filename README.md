@@ -1,3 +1,3 @@
 # scrapeMe
 
-![blah](myapp.svg)
+![blah](http://clydet.github.io/scrapeMe/myapp.svg)
